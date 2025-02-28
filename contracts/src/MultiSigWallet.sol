@@ -165,6 +165,15 @@ contract MultiSigWallet is EIP712, Ownable {
     }
 
     /**
+     * @dev Get message hash for a struct hash (for testing)
+     * @param _structHash The hash of the struct to sign
+     * @return The final message hash
+     */
+    function getMessageHash(bytes32 _structHash) public view returns (bytes32) {
+        return _hashTypedDataV4(_structHash);
+    }
+
+    /**
      * @dev Recover signer from signature
      * @param _txHash Transaction hash
      * @param _signature Signature
