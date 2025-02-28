@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
+import contractABI from "./abi.json";
 
 const MultiSigWallet = () => {
   const [web3, setWeb3] = useState(null);
@@ -31,8 +32,7 @@ const MultiSigWallet = () => {
           
           // Initialize contract with ABI and address
           // This would be replaced with your deployed contract address
-          const contractAddress = '0x...'; // Replace with your contract address
-          const contractABI = ["a"]; // Replace with your contract ABI
+          const contractAddress = '0xf1Da1b87f3364a8037A92aD31449eD5D91331B8c'; // Replace with your contract address
           
           const contract = new web3Instance.eth.Contract(contractABI, contractAddress);
           setWalletContract(contract);
@@ -107,11 +107,16 @@ const MultiSigWallet = () => {
   };
 
   const signTransaction = async (txObject) => {
+    const txObjectForSigning = {
+      ...txObject,
+      value: txObject.value.toString(),
+    };
+
     const domain = {
       name: "MultiSig-Wallet",
       version: "1",
       verifyingContract: walletAddress,
-      chainId: chainId
+      chainId: typeof chainId === 'bigint' ? chainId.toString() : chainId
     };
 
     const types = {
@@ -136,7 +141,7 @@ const MultiSigWallet = () => {
       },
       primaryType: "Transaction",
       domain,
-      message: txObject
+      message: txObjectForSigning
     };
 
     try {
